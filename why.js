@@ -1,7 +1,9 @@
 var answeredTabs = [];
 const retriggerThreshold = 5;
-var urlChanges = 0; //if exceeds retriggerThreshold, then retrigger WHY
+var urlChanges = 1; //if exceeds retriggerThreshold, then retrigger WHY
 var reasons = [];
+var badurls = ["facebook","reddit"];
+const minReasonLength = 5;
 
 function extLog(logLine)
 {
@@ -9,19 +11,23 @@ function extLog(logLine)
 }
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 	var url = changeInfo.url;
+	extLog("here");
 	if(url)
-	{
-		var badurls = ["facebook","reddit"];
-		for (i = 0; i < 3; i++)
+	{	
+		urlChanges++;
+		if (urlChanges >= retriggerThreshold) answeredTabs.pop(tabId);
+		extLog(badurls.length);
+		for (i = 0; i < badurls.length; i++)
 		{			
 			if (url.indexOf(badurls[i]) >= 0)
-			{
-				urlChanges++;
+			{				
 				extLog(urlChanges);
-				if (answeredTabs.indexOf(tabId) == -1 || urlChanges >= retriggerThreshold) onWhyTab(tabId);
+				if (answeredTabs.indexOf(tabId) == -1) 
+					{
+						onWhyTab(tabId);
+					}
 			}
-		}
-		
+		}		
 	} 
 });
 
@@ -29,7 +35,7 @@ function onWhyTab(tabId){
 	var whywhy = "WHY? ";
 	for (i = 1; i < 666;  i++) whywhy += "WHY? "
 	var reason = prompt(whywhy);
-	if (reason == null || reason == "")
+	if (!isValidReason(reason))
 	{
 		chrome.tabs.getCurrent(function(tab)
 		{
@@ -39,9 +45,18 @@ function onWhyTab(tabId){
 	}
 	else
 	{ 
+		
 		answeredTabs.push(tabId);
 		reasons.push(reason);
+		extLog(answeredTabs);
 		extLog(reasons);
-		urlChanges = 0;
+		urlChanges = 1;
 	}
+}
+
+function isValidReason(reason)
+{
+	if (reason == null || reason =="") return false;
+	if (reason.length < minReasonLength) return false;
+	return true;
 }
