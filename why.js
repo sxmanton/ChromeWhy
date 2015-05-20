@@ -24,7 +24,7 @@ function onWhyTab(tabId){
 var whywhy = "WHY? ";
 for (i = 0; i < 200;  i++) whywhy += "WHY? "
 var reason = prompt(whywhy,"");
-if (reason == null)
+if (reason == null || reason == "")
 {
 	chrome.tabs.getCurrent(function(tab)
 	{
