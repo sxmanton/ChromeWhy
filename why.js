@@ -4,6 +4,7 @@ var urlChanges = 1; //if exceeds retriggerThreshold, then retrigger WHY
 var reasons = [];
 var badurls = ["facebook","reddit"];
 const minReasonLength = 5;
+var WHYshown;
 
 function extLog(logLine)
 {
@@ -22,7 +23,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 			if (url.indexOf(badurls[i]) >= 0)
 			{				
 				extLog(urlChanges);
-				if (answeredTabs.indexOf(tabId) == -1) 
+				if (answeredTabs.indexOf(tabId) == -1 && !WHYshown) 
 					{
 						onWhyTab(tabId);
 					}
@@ -32,6 +33,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 });
 
 function onWhyTab(tabId){
+	WHYshown = true;
 	var whywhy = "WHY? ";
 	for (i = 1; i < 666;  i++) whywhy += "WHY? "
 	var reason = prompt(whywhy);
@@ -45,7 +47,7 @@ function onWhyTab(tabId){
 	}
 	else
 	{ 
-		
+		WHYshown = false;
 		answeredTabs.push(tabId);
 		reasons.push(reason);
 		extLog(answeredTabs);
