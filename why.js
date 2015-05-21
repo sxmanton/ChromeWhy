@@ -5,12 +5,20 @@ var reasons = [];
 var badurls = ["facebook","reddit"];
 const minReasonLength = 5;
 
+// Some links might include redirects, which triggers the event twice. This prevents the two unncessary calls.
+var tabsBeingProcessed = [];
+
 function extLog(logLine)
 {
 	chrome.extension.getBackgroundPage().console.log(logLine);
 }
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+	if (tabsBeingProcessed.indexOf(tabId) != -1)
+		return;
+
+	tabsBeingProcessed.push(tabId);
+
 	var url = changeInfo.url;
 	extLog("here");
 	if(url)
@@ -30,6 +38,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 			}
 		}
 	}
+
+	tabsBeingProcessed.pop(tabId);
 });
 
 function onWhyTab(tabId){
