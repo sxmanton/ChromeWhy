@@ -9,26 +9,27 @@ function extLog(logLine)
 {
 	chrome.extension.getBackgroundPage().console.log(logLine);
 }
+
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 	var url = changeInfo.url;
 	extLog("here");
 	if(url)
-	{	
+	{
 		urlChanges++;
 		if (urlChanges >= retriggerThreshold) answeredTabs.pop(tabId);
 		extLog(badurls.length);
 		for (i = 0; i < badurls.length; i++)
-		{			
+		{
 			if (url.indexOf(badurls[i]) >= 0)
-			{				
+			{
 				extLog(urlChanges);
-				if (answeredTabs.indexOf(tabId) == -1) 
-					{
-						onWhyTab(tabId);
-					}
+				if (answeredTabs.indexOf(tabId) == -1)
+				{
+					onWhyTab(tabId);
+				}
 			}
-		}		
-	} 
+		}
+	}
 });
 
 function onWhyTab(tabId){
@@ -44,8 +45,7 @@ function onWhyTab(tabId){
 		console.log("Closing tab");
 	}
 	else
-	{ 
-		
+	{
 		answeredTabs.push(tabId);
 		reasons.push(reason);
 		extLog(answeredTabs);
@@ -58,5 +58,6 @@ function isValidReason(reason)
 {
 	if (reason == null || reason =="") return false;
 	if (reason.length < minReasonLength) return false;
+
 	return true;
 }
