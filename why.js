@@ -3,6 +3,7 @@ const retriggerThreshold = 5;
 var urlChanges = 1; //if exceeds retriggerThreshold, then retrigger WHY
 var reasons = [];
 var badurls = ["facebook","reddit"];
+var whitelist = ["https://www.facebook.com/events/1831833307042101/"];
 const minReasonLength = 5;
 
 // Some links might include redirects, which triggers the event twice. This prevents the two unncessary calls.
@@ -30,11 +31,18 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 		{
 			if (url.indexOf(badurls[i]) >= 0)
 			{
-				extLog(urlChanges);
-				if (answeredTabs.indexOf(tabId) == -1)
+				for (j = 0; j<whitelist.length; j++)
 				{
-					onWhyTab(tabId);
+					if (url.indexOf(whitelist[i]) == -1)
+					{
+						extLog(urlChanges);
+						if (answeredTabs.indexOf(tabId) == -1)
+						{
+							onWhyTab(tabId);
+						}
+					}
 				}
+				
 			}
 		}
 	}
