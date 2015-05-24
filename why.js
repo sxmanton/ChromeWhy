@@ -2,8 +2,7 @@ var answeredTabs = [];
 const retriggerThreshold = 5;
 var urlChanges = 1; //if exceeds retriggerThreshold, then retrigger WHY
 var reasons = [];
-var badurls = ["facebook","reddit"];
-var whitelist = ["https://www.facebook.com/events/1831833307042101/"];
+var blacklist, whitelist;
 const minReasonLength = 5;
 
 // Some links might include redirects, which triggers the event twice. This prevents the two unncessary calls.
@@ -17,25 +16,26 @@ function extLog(logLine)
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 	if (tabsBeingProcessed.indexOf(tabId) != -1)
 		return;
-
 	tabsBeingProcessed.push(tabId);
 
+	chrome.storage.sync.get({'blacklist':"",'whitelist':""}, function(items){
+		blacklist = items.blacklist.split(',');
+		whitelist = items.whitelist.split(',');
+	});
+
 	var url = changeInfo.url;
-	extLog("here");
 	if(url)
 	{
 		urlChanges++;
 		if (urlChanges >= retriggerThreshold) answeredTabs.pop(tabId);
-		extLog(badurls.length);
-		for (i = 0; i < badurls.length; i++)
+		for (i = 0; i < blacklist.length; i++)
 		{
-			if (url.indexOf(badurls[i]) >= 0)
+			if (url.indexOf(blacklist[i]) >= 0)
 			{
 				for (j = 0; j<whitelist.length; j++)
 				{
 					if (url.indexOf(whitelist[i]) == -1)
 					{
-						extLog(urlChanges);
 						if (answeredTabs.indexOf(tabId) == -1)
 						{
 							onWhyTab(tabId);
@@ -66,8 +66,6 @@ function onWhyTab(tabId){
 	{
 		answeredTabs.push(tabId);
 		reasons.push(reason);
-		extLog(answeredTabs);
-		extLog(reasons);
 		urlChanges = 1;
 	}
 }

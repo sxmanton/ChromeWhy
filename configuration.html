@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Configuration for WHY</title>
+<script type="text/javascript" src="configuration.js"></script>
+<link rel="stylesheet" type="text/css" href="bootstrap.css">
+<style>
+div {
+	padding: 0px 10px;
+}
+</style>
+</head>
+<div>
+<legend>"Ask yourself why" settings</legend>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="blacklist">Blacklisted terms</label>
+  <div class="controls">
+    <input id="blacklist" name="blacklist" type="text" placeholder="facebook, reddit" class="input-xlarge">
+    <p class="help-block">Terms in URL that will trigger WHY popup, comma-separated</p>
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="control-group">
+  <label class="control-label" for="whitelist">Whitelisted URLs</label>
+  <div class="controls">
+    <input id="whitelist" name="whitelist" type="text" placeholder="" class="input-xlarge">
+    <p class="help-block">Any specific URLs that would trigger WHY due to blacklist, but that you want to access without the popup. <br/> i.e. if there are parts of facebook like a business or event page that you need to access regularly for productive reasons. <br/> Again, use comma separation for multiple urls.</p>
+  </div>
+</div>
+
+<!-- Button -->
+<div class="control-group">
+  <div class="controls">
+    <button id="submitbutton" name="submitbutton" class="btn btn-primary">Save Changes</button>
+  </div>
+</div>
+</html>

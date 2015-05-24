@@ -2,6 +2,7 @@
   "manifest_version": 2,
 
   "name": "Ask yourself why",
+  "options_page" : "configuration.html",
   "description" : "Do you really need/want to be on a timewasting site right now?",
   "version": "1.0",
   "background": {
@@ -9,7 +10,7 @@
     "persistent": false
   },
   "permissions": [
-  "webNavigation",
+  "storage",
   "*://*/*",
   "tabs"
   ]
