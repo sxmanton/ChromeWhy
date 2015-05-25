@@ -24,7 +24,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 	});
 
 	var url = changeInfo.url;
-	if(url)
+	if(url && blacklist != null)
 	{
 		urlChanges++;
 		if (urlChanges >= retriggerThreshold) answeredTabs.pop(tabId);
