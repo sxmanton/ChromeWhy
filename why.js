@@ -1,7 +1,7 @@
 var answeredTabs = [];
 const retriggerThreshold = 5;
 var urlChanges = 1; //if exceeds retriggerThreshold, then retrigger WHY
-var reasons = [];
+var reasonCount = {};
 var blacklist, whitelist;
 const minReasonLength = 5;
 
@@ -18,9 +18,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 		return;
 	tabsBeingProcessed.push(tabId);
 
-	chrome.storage.sync.get({'blacklist':"",'whitelist':""}, function(items){
+	chrome.storage.sync.get({'blacklist':"",'whitelist':"","reasonCount":{}}, function(items){
 		blacklist = items.blacklist.split(',');
 		whitelist = items.whitelist.split(',');
+		reasonCount = items.reasonCount;
 	});
 
 	var url = changeInfo.url;
@@ -65,7 +66,14 @@ function onWhyTab(tabId){
 	else
 	{
 		answeredTabs.push(tabId);
-		reasons.push(reason);
+		if (reasonCount[reason] == undefined)
+		{
+			reasonCount[reason] = 1;
+		}
+		else reasonCount[reason] += 1;
+		chrome.storage.sync.set({'reasonCount':reasonCount},function(){
+			extLog("Reasons saved");
+		})
 		urlChanges = 1;
 	}
 }
